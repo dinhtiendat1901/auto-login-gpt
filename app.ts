@@ -17,10 +17,10 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth"
     if (loginButton) {
         await page.click('[data-testid="login-button"]');
         await page.waitForSelector('#username');
-        await page.type('#username', 'shoptaikhoan6@hotmail.com');
+        await page.type('#username', 'user5474@jcnorris.com');
         await page.click('.cf4ff3b5d.c5faccce1.cfccd0b2a.c901653c3');
         await page.waitForSelector('#password');
-        await page.type('#password', 'Hemvl.com/78K-thang.shopgiare0054');
+        await page.type('#password', 'Account@4642');
 
 
         await new Promise(r => setTimeout(r, 3000));
@@ -39,20 +39,16 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth"
     });
     const messageLimit = await page.$('.flex.items-center.gap-6');
     if (messageLimit) {
-        const message = await page.evaluate(() => {
-            return document.querySelector('.flex.items-center.gap-6')!.childNodes[0].textContent;
-        });
+        // const message = await page.evaluate(() => {
+        //     return document.querySelector('.flex.items-center.gap-6')!.childNodes[0].textContent;
+        // });
         await page.click('.flex.w-full.items-center.gap-2.rounded-lg.p-2.text-sm');
         await page.waitForFunction(selector => {
             const elements = document.querySelectorAll(selector);
             return elements[elements.length - 1].childNodes[1].textContent === 'Log out';
-            // return elements.length >= 5;
         }, {}, '.flex.px-3.py-1.items-center.gap-3.cursor-pointer.text-sm');
-        await page.waitForSelector('.flex.px-3.py-1.items-center.gap-3.cursor-pointer.text-sm');
-        // await new Promise(r => setTimeout(r, 1000));
-        await (await page.$$('.flex.px-3.py-1.items-center.gap-3.cursor-pointer.text-sm'))[4].click();
-        console.log('message is:' + message);
-    } else {
-        console.log('con message');
+        const listMenu = await page.$$('.flex.px-3.py-1.items-center.gap-3.cursor-pointer.text-sm');
+        await listMenu[listMenu.length - 1].click();
     }
+
 })();
