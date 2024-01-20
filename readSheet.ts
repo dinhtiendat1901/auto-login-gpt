@@ -36,11 +36,10 @@ export default async function getListAccount(): Promise<gptAccount[]> {
 
         listAccount.push({id, password});
     }
-    await getData('A35:A35', 'A36:A36');
-    await getData('A13:A13', 'A14:A14');
-    await getData('A17:A17', 'A18:A18');
-    await getData('A21:A21', 'A22:A22');
-    await getData('A25:A25', 'A26:A26');
-    await getData('A29:A29', 'A30:A30');
+
+    await getData('A10:A10', 'A11:A11');
+    await getData('A14:A14', 'A15:A15');
+    await getData('A18:A18', 'A19:A19');
+    await getData('A22:A22', 'A23:A23');
     return listAccount;
 }
