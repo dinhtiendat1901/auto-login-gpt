@@ -11,6 +11,7 @@ export default async function checkMessage(browser: Browser, id: string, passwor
         await page.click('[data-testid="login-button"]');
         await page.waitForSelector('#username');
         await page.type('#username', id);
+        await page.waitForSelector('.cf4ff3b5d.c5faccce1.cfccd0b2a.c901653c3');
         await page.click('.cf4ff3b5d.c5faccce1.cfccd0b2a.c901653c3');
         await page.waitForSelector('#password');
         await page.type('#password', password);
@@ -18,14 +19,19 @@ export default async function checkMessage(browser: Browser, id: string, passwor
 
         await new Promise(r => setTimeout(r, 3000));
         await page.click('.cf4ff3b5d.c5faccce1.cfccd0b2a.c901653c3');
+        await page.waitForNavigation();
 
 
-        await page.waitForSelector('.group.flex.cursor-pointer.items-center.gap-1.rounded-xl.py-2.px-3.text-lg.font-medium');
-        await page.click('.group.flex.cursor-pointer.items-center.gap-1.rounded-xl.py-2.px-3.text-lg.font-medium');
-
-        await page.waitForSelector('[data-radix-collection-item]');
-        await (await page.$$('[data-radix-collection-item]'))[0].click();
     }
+    await page.waitForSelector('.flex.w-full.items-center.gap-2.rounded-lg.border.border-gray-100.bg-gray-50.p-4', {timeout: 1000}).catch(() => {
+    });
+    const workspaceButton = await page.$('.flex.w-full.items-center.gap-2.rounded-lg.border.border-gray-100.bg-gray-50.p-4');
+    if (workspaceButton) await page.click('.flex.w-full.items-center.gap-2.rounded-lg.border.border-gray-100.bg-gray-50.p-4');
+    await page.waitForSelector('.group.flex.cursor-pointer.items-center.gap-1.rounded-xl.py-2.px-3.text-lg.font-medium');
+    await page.click('.group.flex.cursor-pointer.items-center.gap-1.rounded-xl.py-2.px-3.text-lg.font-medium');
+
+    await page.waitForSelector('[data-radix-collection-item]');
+    await (await page.$$('[data-radix-collection-item]'))[0].click();
     await page.waitForSelector('.btn.relative.btn-neutral.group.w-full.whitespace-nowrap.rounded-xl.px-4.py-3.text-left.text-gray-700');
     await (await page.$$('.btn.relative.btn-neutral.group.w-full.whitespace-nowrap.rounded-xl.px-4.py-3.text-left.text-gray-700'))[0].click();
     await page.waitForSelector('.flex.items-center.gap-6', {timeout: 7000}).catch(() => {
