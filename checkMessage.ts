@@ -1,12 +1,11 @@
 import selectGPT4 from "./selectGPT4";
 import logOut from "./logOut";
 import logIn from "./logIn";
-import {currentPage, setCurrentPage, currentBrowser} from "./globalVariable";
+import {currentPage, setCurrentPage, currentBrowser, logPage} from "./globalVariable";
 import checkMessageLimited from "./checkMessageLimited";
 
 export default async function checkMessage(id: string, password: string): Promise<boolean> {
     setCurrentPage(await currentBrowser.newPage());
-    currentPage.setDefaultTimeout(10000);
     await currentPage.goto('https://chat.openai.com/');
     await logIn(id, password);
 
@@ -18,7 +17,7 @@ export default async function checkMessage(id: string, password: string): Promis
     await selectGPT4();
     const resultCheckMessage = await checkMessageLimited();
     if (resultCheckMessage.limited) {
-        console.log(resultCheckMessage.time);
+        await logPage.type('#edit_textarea', resultCheckMessage.time + '\n');
         await logOut();
         return false;
     }

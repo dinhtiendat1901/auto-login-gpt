@@ -3,7 +3,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth"
 import getListAccount from "./readSheet";
 import checkMessage from "./checkMessage";
 import checkLogin from "./checkLogin";
-import {setCurrentBrowser} from "./globalVariable";
+import {setCurrentBrowser, setLogPage} from "./globalVariable";
 
 (async () => {
     const pathToExtension = 'section/Default/Extensions/kbfnbcaeplbcioakkpcpgfkobkghlhen/14.1150.0_0';
@@ -16,6 +16,9 @@ import {setCurrentBrowser} from "./globalVariable";
         ],
     });
     setCurrentBrowser(browser);
+    const logPage = await browser.newPage();
+    await logPage.goto('https://anotepad.com/');
+    setLogPage(logPage);
     if (!(await checkLogin())) return;
     const listAccount = await getListAccount();
     for (const gptAccount of listAccount) {
