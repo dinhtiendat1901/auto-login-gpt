@@ -1,6 +1,7 @@
 import selectGPT4 from "./selectGPT4";
 import logOut from "./logOut";
 import {currentBrowser, currentPage, setCurrentPage} from "./globalVariable";
+import checkMessageLimited from "./checkMessageLimited";
 
 export default async function checkLogin(): Promise<boolean> {
     setCurrentPage(await currentBrowser.newPage());
@@ -12,10 +13,8 @@ export default async function checkLogin(): Promise<boolean> {
     if (loginButton) return true;
 
     await selectGPT4();
-    await currentPage.waitForSelector('.flex.items-center.gap-6', {timeout: 7000}).catch(() => {
-    });
-    const messageLimit = await currentPage.$('.flex.items-center.gap-6');
-    if (messageLimit) {
+    const resultCheckMessage = await checkMessageLimited();
+    if (resultCheckMessage.limited) {
         await logOut();
         return true;
     }
