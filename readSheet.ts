@@ -7,7 +7,7 @@ interface gptAccount {
     password: string
 }
 
-const spreadsheetId = "1U3-1LHmcDC_TW-pv2xZlqui3hCM4C6Q_F6j6cEnVxoc";
+const spreadsheetId = "1Brj3H7I2eO0m2c4a7I7bo2PqCsaPeeHrIugr5KwFxTs";
 
 async function getServiceAccountKey() {
     const data = await fs.promises.readFile('service-account-key.json', 'utf8');
