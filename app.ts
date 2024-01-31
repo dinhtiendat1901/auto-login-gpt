@@ -1,9 +1,10 @@
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from "puppeteer-extra-plugin-stealth"
-import getListAccount from "./readSheet";
-import checkMessage from "./checkMessage";
-import checkLogin from "./checkLogin";
-import {setCurrentBrowser, setLogPage} from "./globalVariable";
+import {setCurrentBrowser} from "./globalVariable";
+import getListAccount from "./getListAccount";
+import checkAccountIsLogin from "./checkAccountIsLogin";
+import checkAccountIsAvailable from "./checkAccountIsAvailable";
+import logIn from "./logIn";
 
 (async () => {
     const pathToExtension = 'section/Default/Extensions/kbfnbcaeplbcioakkpcpgfkobkghlhen/14.1150.0_0';
@@ -16,17 +17,11 @@ import {setCurrentBrowser, setLogPage} from "./globalVariable";
         ],
     });
     setCurrentBrowser(browser);
-    const logPage = await browser.newPage();
-    await logPage.goto('https://anotepad.com/');
-    setLogPage(logPage);
-    if (!(await checkLogin())) return;
+
+    if (await checkAccountIsLogin()) return;
     const listAccount = await getListAccount();
-    for (const gptAccount of listAccount) {
-        const result = await checkMessage(gptAccount.id, gptAccount.password);
-        if (result) {
-            console.log('FIND OUT ACCOUNT');
-            break;
-        }
+    if (!(await checkAccountIsAvailable(listAccount[0].id, listAccount[0].password))) {
+        await logIn(listAccount[1].id, listAccount[1].password);
     }
 
 })();

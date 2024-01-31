@@ -1,10 +1,10 @@
-import selectGPT4 from "./selectGPT4";
+import checkMessageIsLimited from "./checkMessageIsLimited";
 import logOut from "./logOut";
 import logIn from "./logIn";
-import {currentPage, setCurrentPage, currentBrowser, logPage} from "./globalVariable";
-import checkMessageLimited from "./checkMessageLimited";
+import {currentPage, setCurrentPage, currentBrowser} from "./globalVariable";
+import checkGPT4IsAvailable from "./checkGPT4IsAvailable";
 
-export default async function checkMessage(id: string, password: string): Promise<boolean> {
+export default async function checkAccountIsAvailable(id: string, password: string): Promise<boolean> {
     setCurrentPage(await currentBrowser.newPage());
     await currentPage.goto('https://chat.openai.com/');
     await logIn(id, password);
@@ -14,10 +14,11 @@ export default async function checkMessage(id: string, password: string): Promis
     });
     const workspaceButton = await currentPage.$('.flex.w-full.items-center.gap-2.rounded-lg.border.border-gray-100.bg-gray-50.p-4');
     if (workspaceButton) await currentPage.click('.flex.w-full.items-center.gap-2.rounded-lg.border.border-gray-100.bg-gray-50.p-4');
-    await selectGPT4();
-    const resultCheckMessage = await checkMessageLimited();
-    if (resultCheckMessage.limited) {
-        await logPage.type('#edit_textarea', resultCheckMessage.time + '\n');
+    if (!(await checkGPT4IsAvailable())) {
+        await logOut();
+        return false;
+    }
+    if (await checkMessageIsLimited()) {
         await logOut();
         return false;
     }

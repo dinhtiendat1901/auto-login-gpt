@@ -1,23 +1,23 @@
-import selectGPT4 from "./selectGPT4";
+import checkMessageIsLimited from "./checkMessageIsLimited";
 import logOut from "./logOut";
 import {currentBrowser, currentPage, setCurrentPage} from "./globalVariable";
-import checkMessageLimited from "./checkMessageLimited";
+import checkGPT4IsAvailable from "./checkGPT4IsAvailable";
 
-export default async function checkLogin(): Promise<boolean> {
+export default async function checkAccountIsLogin(): Promise<boolean> {
     setCurrentPage(await currentBrowser.newPage());
     currentPage.setDefaultTimeout(10000);
     await currentPage.goto('https://chat.openai.com/');
     await currentPage.waitForSelector('[data-testid="login-button"]', {timeout: 1000}).catch(() => {
     });
     const loginButton = await currentPage.$('[data-testid="login-button"]');
-    if (loginButton) return true;
-
-    await selectGPT4();
-    const resultCheckMessage = await checkMessageLimited();
-    if (resultCheckMessage.limited) {
+    if (loginButton) return false;
+    if (!(await checkGPT4IsAvailable())) {
         await logOut();
-        return true;
+        return false;
     }
-    console.log('FIND OUT ACCOUNT');
-    return false;
+    if (await checkMessageIsLimited()) {
+        await logOut();
+        return false;
+    }
+    return true;
 }
